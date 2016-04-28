@@ -1,9 +1,11 @@
 <?php
 /*
 Plugin Name: Super Emoji Plus+
+Description: Insert Emoji in your post content editor.
+Author: Eric Andrew Lewis
 Version: 0.1
+Author URI: https://ericandrewlewis.com/
 */
-
 
 add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
   $load_on = array( 'post.php', 'post-new.php' );
@@ -12,22 +14,42 @@ add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
   }
   echo '<style>
   .mce-container .emoji-buttons-outer-wrapper {
-    height: 219px;
-    width: 500px;
+    height: 162px;
+    width: 300px;
     overflow-x: scroll;
+    overflow-y: hidden;
   }
   .mce-container .emoji-buttons-inner-wrapper {
-    width: 10000px;
+    direction: rtl;
+    /*
+    Move the div to prepare it for rotation:
+    x = ( width / 2 ) - (width / 2)
+    y = - ( (height / 2) - (width / 2) )
+     */
+    -webkit-transform: translate(400px,-400px) rotate(-90deg);
+    -moz-transform: translate(400px,-400px) rotate(-90deg);
+    width: 200px;
+    height: 1000px;
+    unicode-bidi: bidi-override;
+    white-space: normal;
   }
-  .mce-container .emoji-button-column {
-    float: left;
-  }
-  .emoji-button-column button {
-    display: block;
-    padding: 4px;
-  }
-  .emoji-button-column img {
+  .mce-container .emoji-buttons-inner-wrapper img.emoji {
     font-size: 24px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+  }
+  i.mce-i-sep_emoji {
+    font: normal 20px/1 dashicons;
+    padding: 0;
+    vertical-align: top;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-left: -2px;
+    padding-right: 2px;
+  }
+  i.mce-i-sep_emoji:before {
+    content: "\f328";
   }
   </style>';
 });
