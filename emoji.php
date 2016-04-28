@@ -14,7 +14,7 @@ add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
   }
   echo '<style>
   .mce-container .emoji-buttons-outer-wrapper {
-    height: 162px;
+    height: 190px;
     width: 300px;
     overflow-x: scroll;
     overflow-y: hidden;
@@ -26,9 +26,9 @@ add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
     x = ( width / 2 ) - (width / 2)
     y = - ( (height / 2) - (width / 2) )
      */
-    -webkit-transform: translate(400px,-400px) rotate(-90deg);
-    -moz-transform: translate(400px,-400px) rotate(-90deg);
-    width: 200px;
+    -webkit-transform: translate(419px,-419px) rotate(-90deg);
+    -moz-transform: translate(419px,-419px) rotate(-90deg);
+    width: 162px;
     height: 1000px;
     unicode-bidi: bidi-override;
     white-space: normal;
