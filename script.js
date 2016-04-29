@@ -31,7 +31,35 @@
 		var doingUndoRedoTimer;
 		var $emojiButtons;
 		var $ = window.jQuery;
+		var _ugh;
+		var controlVisible = false;
+		var node;
 
+
+		window.setInterval(function() {
+			if ( _ugh ){
+				controlVisible = _ugh._parent._parent._parent.visible();
+			}
+		}, 100);
+
+		editor.on( 'keydown', function( event ) {
+			// Check if the parent control is visible and prevent the insert emoji
+			// control from closing if the user is pressing navigational buttons.
+			// the _parent._parent bit seems hacky, but not sure how else to check
+			// if the toolbar is open.
+			if ( controlVisible && ( event.keyCode === 39 || event.keyCode === 37 || event.keyCode === 13 ) ) {
+				var offset = editor.selection.getRng().startOffset;
+				_ugh.handleBrowseEmojiEvent(event);
+				openTheToolbar = true;
+				if ( event.keyCode === 13 ) {
+					var colonIndex = node.data.lastIndexOf( ':', offset );
+					var rng = tinymce.DOM.createRng();
+					rng.setStart(node, colonIndex);
+					rng.setEnd(node, offset);
+					rng.deleteContents();
+				}
+			}
+		} );
 		/**
 		 * An emoji input control.
 		 *
@@ -40,7 +68,10 @@
 		 * gain access to the editor instance in a cleaner way (thinking something like this.editor)?
 		 */
 		tinymce.ui.SEPEmojiInput = tinymce.ui.Control.extend( {
-
+			init: function(settings) {
+				_ugh = this;
+				this._super.call( this, settings );
+			},
 			/**
 			 * Render the control.
 			 *
@@ -90,52 +121,9 @@
 						self.search = search;
 						self.filterEmoji( self.search );
 					})
-					.on('keydown', handleBrowseEmojiEvent);
-
-				function handleBrowseEmojiEvent(event) {
-					if ( event.keyCode === 13 ) {
-						// insert the selected item, don't close the window.
-						openTheToolbar = true;
-						editor.execCommand( 'mceInsertContent',
-							false,
-							fromCodePoint( $emojiButtons.filter('.selected').data('code-point') )
-						);
-						self.$el.find( 'input.sep-emoji-autocomplete' )[0].focus();
-						event.preventDefault();
-					}
-
-					// Left arrow
-					if ( event.keyCode === 37 ) {
-						var current = $emojiButtons.filter('.selected');
-						var prev = current.prevAll('.sep-emoji-buttons button:not(.does-not-match-filter)').first();
-						if ( prev ) {
-							current.removeClass('selected');
-							prev.addClass('selected');
-						}
-						event.preventDefault();
-					}
-
-					// Right arrow
-					if ( event.keyCode === 39 ) {
-						var current = $emojiButtons.filter('.selected');
-						var next = current.nextAll('.sep-emoji-buttons button:not(.does-not-match-filter)').first();
-						if ( next ) {
-							current.removeClass('selected');
-							next.addClass('selected');
-						}
-						event.preventDefault();
-					}
-				}
-
-				editor.on( 'keydown', function( event ) {
-					// Check if the parent control is visible and prevent the insert emoji
-					// control from closing if the user is pressing navigational buttons.
-					// the _parent._parent bit seems hacky, but not sure how else to check
-					// if the toolbar is open.
-					if ( self._parent._parent._parent.visible() && ( event.keyCode === 39 || event.keyCode === 37 || event.keyCode === 13 ) ) {
-						event.preventDefault();
-					}
-				} );
+					.on('keydown', function(event) {
+						self.handleBrowseEmojiEvent(event)
+					} );
 
 				this.$el.find('.sep-emoji-navigation button').on( 'click', function() {
 					var scroll;
@@ -146,6 +134,43 @@
 					}
 					self.$el.find('.sep-emoji-buttons')[0].scrollTop += scroll;
 				});
+			},
+
+			handleBrowseEmojiEvent(event) {
+				if ( event.keyCode === 13 ) {
+					event.preventDefault();
+					// insert the selected item, don't close the window.
+					openTheToolbar = true;
+					editor.execCommand( 'mceInsertContent',
+						false,
+						fromCodePoint( $emojiButtons.filter('.selected').data('code-point') )
+					);
+					if ( ! this.$el.hasClass('text-input-hidden') ) {
+						this.$el.find( 'input.sep-emoji-autocomplete' )[0].focus();
+					}
+				}
+
+				// Left arrow
+				if ( event.keyCode === 37 ) {
+					var current = $emojiButtons.filter('.selected');
+					var prev = current.prevAll('.sep-emoji-buttons button:not(.does-not-match-filter)').first();
+					if ( prev.length ) {
+						current.removeClass('selected');
+						prev.addClass('selected');
+					}
+					event.preventDefault();
+				}
+
+				// Right arrow
+				if ( event.keyCode === 39 ) {
+					var current = $emojiButtons.filter('.selected');
+					var next = current.nextAll('.sep-emoji-buttons button:not(.does-not-match-filter)').first();
+					if ( next.length ) {
+						current.removeClass('selected');
+						next.addClass('selected');
+					}
+					event.preventDefault();
+				}
 			},
 
 			hideTextInput: function() {
@@ -216,7 +241,6 @@
 			// This seems so hacky but how else to I get the button instance?
 			editToolbar.items()[0].items()[0].items()[0].resetEmojiButtonState();
 			openTheToolbar = true;
-
 			// This seems so hacky but how else to I get the button instance?
 			editToolbar.items()[0].items()[0].items()[0].showTextInput();
 			editor.nodeChanged();
@@ -242,9 +266,16 @@
 			}
 		} );
 
+		var lastTimeToolbarTriedToOpen = new Date().getTime();
 		// On the `wptoolbar` event, set the toolbar if we should.
 		editor.on( 'wptoolbar', function( event ) {
+			// Jesus please cleanse my soul.
+			var now = new Date().getTime();
+			if ( now - lastTimeToolbarTriedToOpen < 100 && ! openTheToolbar ) {
+				openTheToolbar = true;
+			}
 			if ( openTheToolbar ) {
+				lastTimeToolbarTriedToOpen = new Date().getTime();
 				openTheToolbar = false;
 				event.toolbar = editToolbar;
 			}
@@ -257,7 +288,7 @@
 		} );
 		function checkInline() {
 			var rng = editor.selection.getRng();
-			var node = rng.startContainer;
+			node = rng.startContainer;
 			var offset = rng.startOffset;
 			var startOffset;
 			var endOffset;
@@ -270,20 +301,17 @@
 				return;
 			}
 
-			// Todo: eventually make this only match the text abutting the caret.
-			function findStart( node ) {
-				return node.data.search( /:[^\s]{3,}/ );
+			var colonIndex = node.data.lastIndexOf( ':', editor.selection.getRng().startOffset );
+			if ( colonIndex == -1 ) {
+				openTheToolbar = false;
+				return;
 			}
-
-			startOffset = findStart( node );
-
-			if ( startOffset === -1 ) {
+			var searchString = node.data.substring( colonIndex+1, editor.selection.getRng().startOffset );
+			if ( ! searchString || searchString.length < 3 ) {
 				openTheToolbar = false;
 				return;
 			}
 
-			var _searchString = node.data.match( /:([^\s]{3,})\s?/ );
-			var searchString = _searchString[1];
 			editToolbar.items()[0].items()[0].items()[0].filterEmoji(searchString);
 
 			openTheToolbar = true;
