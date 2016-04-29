@@ -13,30 +13,20 @@ add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
     return;
   }
   echo '<style>
-  .mce-container .emoji-buttons-outer-wrapper {
-    height: 190px;
-    width: 300px;
-    overflow-x: scroll;
+  .mce-container .emoji-buttons-wrapper {
+    height: 181px;
+    width: 274px;
+    overflow-x: hidden;
     overflow-y: hidden;
-  }
-  .mce-container .emoji-buttons-inner-wrapper {
-    direction: rtl;
-    /*
-    Move the div to prepare it for rotation:
-    x = ( width / 2 ) - (width / 2)
-    y = - ( (height / 2) - (width / 2) )
-     */
-    -webkit-transform: translate(419px,-419px) rotate(-90deg);
-    -moz-transform: translate(419px,-419px) rotate(-90deg);
-    width: 162px;
-    height: 1000px;
-    unicode-bidi: bidi-override;
     white-space: normal;
   }
-  .mce-container .emoji-buttons-inner-wrapper img.emoji {
+  .mce-container .sep-emoji-autocomplete {
+    width: 242px;
+    padding: 5px;
+    margin: 10px;
+  }
+  .mce-container .emoji-buttons-wrapper img.emoji {
     font-size: 24px;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
   }
   i.mce-i-sep_emoji {
     font: normal 20px/1 dashicons;
