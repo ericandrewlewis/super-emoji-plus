@@ -13,17 +13,21 @@ add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
     return;
   }
   echo '<style>
+  .mce-container .sep-emoji-autocomplete {
+    width: 232px;
+    padding: 5px;
+    margin: 10px;
+  }
   .mce-container .emoji-buttons-wrapper {
     height: 181px;
-    width: 274px;
+    width: 252px;
+    margin: 0 7px 15px;
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: normal;
   }
-  .mce-container .sep-emoji-autocomplete {
-    width: 242px;
-    padding: 5px;
-    margin: 10px;
+  .mce-container .emoji-buttons-wrapper button {
+    margin: 2px;
   }
   .mce-container .emoji-buttons-wrapper img.emoji {
     font-size: 24px;
