@@ -7,7 +7,7 @@ Version: 0.1
 Author URI: https://ericandrewlewis.com/
 */
 
-add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
+function sep_admin_enqueue_scripts( $hook_suffix ) {
   $load_on = array( 'post.php', 'post-new.php' );
   if ( ! in_array( $hook_suffix, $load_on ) ) {
     return;
@@ -88,14 +88,17 @@ add_action( 'admin_enqueue_scripts', function( $hook_suffix ) {
     content: "\f328";
   }
   </style>';
-});
+}
+add_action( 'admin_enqueue_scripts', 'sep_admin_enqueue_scripts');
 
-add_filter( 'mce_external_plugins', function( $plugins ) {
-	$plugins['sep_emoji'] = plugins_url( '/script.js', __FILE__ );
-	return $plugins;
-});
+function sep_mce_external_plugin( $plugins ) {
+  $plugins['sep_emoji'] = plugins_url( '/script.js', __FILE__ );
+  return $plugins;
+}
+add_filter( 'mce_external_plugins', 'sep_mce_external_plugin' );
 
-add_filter( 'mce_buttons', function($buttons) {
+function sep_mce_buttons( $buttons ) {
 	$buttons[] = 'sep_emoji';
 	return $buttons;
-});
+}
+add_filter( 'mce_buttons', 'sep_mce_buttons');
