@@ -3,9 +3,11 @@
 Plugin Name: Super Emoji Plus+
 Description: Insert Emoji in your post content editor.
 Author: Eric Andrew Lewis
-Version: 0.1.1
+Version: 0.1.2
 Author URI: https://ericandrewlewis.com/
 */
+
+define( 'SEP_VERSION', '0.1.2' );
 
 function sep_admin_enqueue_scripts( $hook_suffix ) {
   $load_on = array( 'post.php', 'post-new.php' );
@@ -92,7 +94,8 @@ function sep_admin_enqueue_scripts( $hook_suffix ) {
 add_action( 'admin_enqueue_scripts', 'sep_admin_enqueue_scripts');
 
 function sep_mce_external_plugin( $plugins ) {
-  $plugins['sep_emoji'] = plugins_url( '/script.js', __FILE__ );
+  // Append a version number to bust cache appropriately.
+  $plugins['sep_emoji'] = plugins_url( '/script.js', __FILE__ ) . '?version=' . SEP_VERSION;
   return $plugins;
 }
 add_filter( 'mce_external_plugins', 'sep_mce_external_plugin' );

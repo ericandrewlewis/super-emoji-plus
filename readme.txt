@@ -19,6 +19,9 @@ It will also enable autocomplete of emoji by typing a colon and then an emoji na
 
 == Changelog ==
 
+= 0.1.2 =
+* Ensure JavaScript file is cache busted on new versions.
+
 = 0.1.1 =
 * Autocomplete bug fixes
 * PHP 5.2 compatibility
