@@ -53,6 +53,10 @@
 				openTheToolbar = true;
 				if ( event.keyCode === 13 ) {
 					var colonIndex = node.data.lastIndexOf( ':', offset );
+					// Cancel out if the autocomplete text has already been deleted.
+					if ( colonIndex === -1 ) {
+						return;
+					}
 					var rng = tinymce.DOM.createRng();
 					rng.setStart(node, colonIndex);
 					rng.setEnd(node, offset);
@@ -307,8 +311,9 @@
 				return;
 			}
 			var searchString = node.data.substring( colonIndex+1, editor.selection.getRng().startOffset );
-			if ( ! searchString || searchString.length < 3 ) {
+			if ( ! searchString || searchString.length < 3 || searchString.indexOf(' ') !== -1 ) {
 				openTheToolbar = false;
+				editor.nodeChanged();
 				return;
 			}
 
