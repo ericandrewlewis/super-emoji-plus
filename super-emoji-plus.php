@@ -3,7 +3,7 @@
 Plugin Name: Super Emoji Plus+
 Description: Insert Emoji in your post content editor.
 Author: Eric Andrew Lewis
-Version: 0.1
+Version: 0.1.1
 Author URI: https://ericandrewlewis.com/
 */
 
