@@ -3,11 +3,11 @@
 Plugin Name: Super Emoji Plus+
 Description: Insert Emoji in your post content editor.
 Author: Eric Andrew Lewis
-Version: 0.1.2
+Version: 0.1.3
 Author URI: https://ericandrewlewis.com/
 */
 
-define( 'SEP_VERSION', '0.1.2' );
+define( 'SEP_VERSION', '0.1.3' );
 
 function sep_admin_enqueue_scripts( $hook_suffix ) {
   $load_on = array( 'post.php', 'post-new.php' );

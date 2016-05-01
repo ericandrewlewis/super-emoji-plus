@@ -19,6 +19,9 @@ It will also enable autocomplete of emoji by typing a colon and then an emoji na
 
 == Changelog ==
 
+= 0.1.3 =
+* Open autocomplete results after 2 letters have been typed rather than 3.
+
 = 0.1.2 =
 * Ensure JavaScript file is cache busted on new versions.
 
