@@ -311,7 +311,7 @@
 				return;
 			}
 			var searchString = node.data.substring( colonIndex+1, editor.selection.getRng().startOffset );
-			if ( ! searchString || searchString.length < 3 || searchString.indexOf(' ') !== -1 ) {
+			if ( ! searchString || searchString.length < 2 || searchString.indexOf(' ') !== -1 ) {
 				openTheToolbar = false;
 				editor.nodeChanged();
 				return;
