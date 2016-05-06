@@ -3,11 +3,11 @@
 Plugin Name: Super Emoji Plus+
 Description: Insert Emoji in your post content editor.
 Author: Eric Andrew Lewis
-Version: 0.1.3
+Version: 0.1.4
 Author URI: https://ericandrewlewis.com/
 */
 
-define( 'SEP_VERSION', '0.1.3' );
+define( 'SEP_VERSION', '0.1.4' );
 
 function sep_wp_enqueue_editor() {
   wp_enqueue_style( 'sep-style', plugins_url( '/style.css', __FILE__ ) . '?version=' . SEP_VERSION );
